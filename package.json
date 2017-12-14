@@ -47,7 +47,9 @@
     "forge-oss": "*",
     "gen-uid": "*",
     "path": "*",
-    "serve-favicon": "*"
+    "puppeteer": "^0.13.0",
+    "serve-favicon": "*",
+    "sleep": "^5.1.1"
   },
   "devDependencies": {
     "mocha": "*",

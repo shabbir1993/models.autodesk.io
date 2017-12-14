@@ -223,6 +223,15 @@ function translatedItem (id, name, urn) {
     $('#' + id + ' div button.view-result').click (function (e) {
         var windowName =$(this).attr ('data-clipboard-text') ;
         window.open ('/view.html?urn=' + encodeURIComponent (windowName) + '&token=' + encodeURIComponent ($('#accessToken').val ()), windowName, "height=768,width=1024") ;
+        var test = $('#accessToken').val ();
+        //var testUrn = windowName;
+        
+        $.ajax({
+        	url: '/api/testView',
+        	type: 'POST', 
+			contentType: 'application/json', 
+			data: JSON.stringify({token: test, urn: windowName})
+        })
     }) ;
 }
 

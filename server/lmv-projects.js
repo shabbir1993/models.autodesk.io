@@ -31,13 +31,15 @@ var ForgeOSS =require ('forge-oss') ;
 var ForgeModelDerivative =require ('forge-model-derivative') ;
 
 var config =require ('./credentials') ;
-
+var puppeteer = require('puppeteer');
+var sleep = require("sleep");
 var ossBuckets =new ForgeOSS.BucketsApi () ;
 var ossObjects =new ForgeOSS.ObjectsApi () ;
 var md =new ForgeModelDerivative.DerivativesApi () ;
 
 var router =express.Router () ;
 router.use (bodyParser.json ()) ;
+var url = '';
 
 router.get ('/translate/:urn/progress', function (req, res) {
 	var accessToken =req.query.accessToken ;
@@ -93,6 +95,45 @@ function ExistOrCreate (bucketKey) {
 		})
 	) ;
 }
+
+function takeScreenShot() {
+	(async () => {
+	  //let path = 'https://nodevm-shabbir1993.c9users.io/testViewer.html?=' + urn + '&token=' + token;
+	  let path = url;
+	  const browser = await puppeteer.launch();
+	  try {
+		  const page = await browser.newPage();
+		  await page.goto(path);
+		  page.setViewport({width: 2320, height: 1280});
+		  sleep.sleep(2);
+		  //await page.mainFrame().waitForSelector('.atdsk-viewing-viewer');
+		  /*await page.on('console', msg => console.log('Num Meshes on GPU'));
+			  page.on('error', function(error){
+			    console.log(error)
+		  })*/
+	      process.on("unhandledRejection", (reason, p) => {
+			  console.error("Unhandled Rejection at: Promise", p, "reason:", reason);
+			  browser.close();
+		  });
+		 
+		  await page.setRequestInterception(false);
+		  console.log(url);
+		  await page.screenshot({path: './screenshots/example1.png'});
+	  }
+	  
+	  catch(ex) {
+	  	console.log('Failed to take screenshot');
+	  	console.log(ex);
+	  }
+	  
+	  finally{
+	  	
+		await browser.close();
+	  }
+	  
+	})();
+}
+
 
 router.post ('/translate', function (req, res) {
 	var accessToken =req.body.accessToken ;
@@ -152,6 +193,17 @@ router.post ('/translate', function (req, res) {
 		})
 	;
 }) ;
+
+router.post('/testView', function(req, res) {
+	console.log(req.body);
+	console.log("Hello from server");
+	var token = req.body.token;
+	var urn = req.body.urn;
+	url = 'https://nodevm-shabbir1993.c9users.io/testView.html?=' + urn + '&token=' + token;
+	takeScreenShot();
+	//console.log('taken');
+})
+
 
 
 module.exports =router ;
