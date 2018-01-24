@@ -23,7 +23,7 @@ instructions to get on-board.
 
 
 ## Live demo at
-https://models.autodesk.io/
+http://snagz.herokuapp.com
 
 ### Thumbnail
 [![thumbnail](www/images/app.png)](https://models.autodesk.io/)
